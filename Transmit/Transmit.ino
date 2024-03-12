@@ -12,8 +12,11 @@
 #define B1Pin 5
 #define B2Pin 6
 
-struct DataPacket {
 
+struct DataPacket {
+/*
+  Data Structure for transmitting the input variables to the robot, called using inputdata
+*/
 int JoyLY = 0; // Left Joystick Y value
 int JoyLX = 0; // Left Joystick X value
 int JoyRY = 0; // Right Joystick Y value
@@ -49,16 +52,20 @@ bool B2P = 0; // Button 2 Previous State BOOL
 bool B2C = 0; // Button 2 Current State BOOL
 bool B2T = 0; // Button 2 Toggle State BOOL
 
-const byte address[6] = "64479";
-RF24 radio(9, 8);
+const byte address[6] = "64479"; // Set address to 64479 (Team's unique signal code)
+RF24 radio(9, 8); // initialize radio on pins 9 and 8
 
 void setup() {
+  // Radio Setup
   radio.begin();
   radio.setPALevel(RF24_PA_LOW);
   radio.openWritingPipe(address);
   radio.stopListening();
 
+  // Open serial port
   Serial.begin(9600);
+
+  // Initializes digital inputs
   pinMode(JoyLBPin,INPUT_PULLUP);
   pinMode(JoyRBPin,INPUT_PULLUP);
   pinMode(B1Pin,INPUT_PULLUP);
@@ -75,7 +82,7 @@ void loop() {
   JoyRX = analogRead(JoyRXPin);
 
 
-  //Joystick Left button True Toggle
+  //  Joystick Left button True Toggle
   JoyLBP = JoyLBC;
   JoyLBC = digitalRead(JoyLBPin);
   if (JoyLBP > JoyLBC){
@@ -107,11 +114,18 @@ void loop() {
     delay(150);
   }
 
+  // Print inputs into Serial Monitor
   SerialPrint();
+
+  // Updates data in the Datapacket datastructure
   DataUpdate();
+
+  // Transmits the Datapacket
   Transmit();
 }
 
+
+// Function to print out the Input variables in the serial monitor
 void SerialPrint() {
   Serial.print(JoyLY);
   Serial.print("  ");
@@ -131,6 +145,7 @@ void SerialPrint() {
   Serial.println("  ");
 }
 
+// Function to update the datapacket
 void DataUpdate() {
   // Update Joystick variables into DataPacket
   inputdata.JoyLY = JoyLY;
@@ -146,7 +161,7 @@ void DataUpdate() {
 
 }
 
-// Function to send the 
+// Function to send the datapacket to the reciever module
 void Transmit() {
   radio.write(&inputdata, sizeof(DataPacket)); //send Data 
   delay(50);
