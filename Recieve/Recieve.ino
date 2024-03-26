@@ -1,8 +1,12 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
+<<<<<<< HEAD
 #include <Servo.h>
 //heelo
+=======
+//heelo hi
+>>>>>>> ce096e861163a30c0d91f56e24a2f551acd577cd
 const byte address[6] = "64479"; // Set address to 64479 (Team's unique signal code)
 RF24 radio(9, 8); // initialize radio on pins 9 and 8
 
