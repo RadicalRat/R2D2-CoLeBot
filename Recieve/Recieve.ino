@@ -79,20 +79,37 @@ void SerialPrint() {
   Serial.print(inputdata.B2T);
   Serial.println("  ");
 }
-
+// Arm Servo Function
 void servo_arm_control() {
-  JoyLBT++;
+  JoyLBT++;  // Change condition
+
   if (JoyLBT > 2) {
     JoyLBT = 0;
   }
-  if (JoyLBT == 0) {
+  if (JoyLBT == 0) {    //Position 0
     servo_arm_angle = 0;
   }
-  else if (JoyLBT == 1) {
+  else if (JoyLBT == 1) {    //Position 1
     servo_arm_angle = 90;
   }
-  else if (JoyLBT == 2) {
+  else if (JoyLBT == 2) {    //Position 2
     servo_arm_angle = 180;
   }
-  armservo.write(servo_arm_angle);
+  armservo.write(servo_arm_angle);  // Change servo angle
+  delay(20);
+}
+
+// Claw Servo Function
+void servo_claw_control() {
+  JoyRBT = !JoyRBT    // Change condition
+
+  if (JoyRBT == 0) {
+    servo_claw_angle = 0;   //Open Position
+  }
+  if (JoyRBT == 1) {
+    servo_claw_angle = 90;    //Closed Position
+  }
+
+  clawservo.write(servo_claw_angle);   // Change servo angle
+  delay(20);
 }
