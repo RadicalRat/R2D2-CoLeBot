@@ -6,7 +6,8 @@ const byte address[6] = "64479"; // Set address to 64479 (Team's unique signal c
 RF24 radio(9, 8); // initialize radio on pins 9 and 8
 
 //Motor initializations
-int motor_pwm = 0;
+int motor1_pwm = 0;
+int motor2_pwm = 0;
 int servo_arm_angle = 0;
 int servo_claw_angle = 0;
 
@@ -37,7 +38,7 @@ void setup() {
 
   //Servos
   armservo.attach(3); // Servo signal wire on pin 3 and 5
-  clawservo.attach(5);
+  clawservo.attach(4);
   armservo.write(servo_arm_angle); // write the desired servo angle (servoangle) to the servo motor
   clawservo.write(servo_claw_angle); // write the desired servo angle (servoangle) to the servo motor
   delay(20);  // every servoname.write(angle); function call needs a 20 ms delay or timer to update servo position
@@ -101,7 +102,7 @@ void servo_arm_control() {
 
 // Claw Servo Function
 void servo_claw_control() {
-  JoyRBT = !JoyRBT    // Change condition
+  JoyRBT = !JoyRBT;    // Change condition
 
   if (JoyRBT == 0) {
     servo_claw_angle = 0;   //Open Position
