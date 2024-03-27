@@ -15,6 +15,9 @@ const int motor2_direction2 = A4;   //Reverse
 
 
 //Motor initializations
+Servo armservo;
+Servo clawservo;
+
 int motor1_pwm = 0;
 int motor2_pwm = 0;
 bool motor1_state1 = LOW;   //Next 4 lines are motor direction variables
@@ -74,18 +77,21 @@ void loop() {
 if (radio.available()) { //if a signal is available
     radio.read(&inputdata, sizeof(DataPacket)); // Read incoming data and store in datapacket datastructure
   }
-  JoyLY = inputdata.JoyLY;
-  JoyLX = inputdata.JoyLX;
-  JoyRY = inputdata.JoyRY;
-  JoyRX = inputdata.JoyRX;
+  int JoyLY = inputdata.JoyLY;
+  int JoyLX = inputdata.JoyLX;
+  int JoyRY = inputdata.JoyRY;
+  int JoyRX = inputdata.JoyRX;
 
-  JoyLBT = inputdata.JoyLBT;
-  JoyRBT = inputdata.JoyRBT;
-  B1T = inputdata.B1T;
-  B2T = inputdata.B2T;
+  bool JoyLBT = inputdata.JoyLBT;
+  bool JoyRBT = inputdata.JoyRBT;
+  bool B1T = inputdata.B1T;
+  bool B2T = inputdata.B2T;
 
   // print input variables read from the reciever
   SerialPrint();
+
+  servo_claw_control(JoyRBT);
+
 
   // wait 50 ms to avoid too many updates happening too quickly
   delay(50);
@@ -112,7 +118,7 @@ void SerialPrint() {
   Serial.println("  ");
 }
 // Arm Servo Function
-void servo_arm_control() {
+/*void servo_arm_control() {
   JoyLBT++;  // Change condition
 
   if (JoyLBT > 2) {
@@ -129,12 +135,10 @@ void servo_arm_control() {
   }
   armservo.write(servo_arm_angle);  // Change servo angle
   delay(20);
-}
+} */
 
 // Claw Servo Function
-void servo_claw_control() {
-  JoyRBT = !JoyRBT;    // Change condition
-
+void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
     servo_claw_angle = 0;   //Open Position
   }
@@ -147,13 +151,20 @@ void servo_claw_control() {
 }
 
 //DC motor control function
-void dc_motor1_control(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
-  if (joystick_value > 600) {
+/*void dc_motor1_control(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
+  if (joystick_value > 600) {   //Forward
     int spin_speed = map(joystick_value, 0, 1023, 0, 255);
     state1 = HIGH;
     state2 = LOW;
     digitalWrite(dir1_pin, state1);
-    digitalWrite(dir12_pin, state2);
+    digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
   }
-}
+  if (joystick_value < 400) {    //Reverse
+    int spin_speed = map(joystick_value, 0, 1023, 0, 255);
+    state1 = LOW;
+    state2 = HIGH;
+    digitalWrite(dir1_pin, state1);
+    digitalWrite(dir12_pin, state2);
+    analogWrite(motor_pin, spin_speed);
+  }*/
