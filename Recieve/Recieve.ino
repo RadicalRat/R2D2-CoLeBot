@@ -5,9 +5,23 @@
 const byte address[6] = "64479"; // Set address to 64479 (Team's unique signal code)
 RF24 radio(9, 8); // initialize radio on pins 9 and 8
 
+// DC motor pins
+const int motor1 = 6
+const int motor2 = 5
+const int motor1_direction1 = A3   //Forward
+const int motor1_direction2 = A2    //Reverse
+const int motor2_direction1 = A5  //Forward
+const int motor2_direction2 = A4   //Reverse
+
+
 //Motor initializations
 int motor1_pwm = 0;
 int motor2_pwm = 0;
+bool motor1_state1 = LOW;   //Next 4 lines are motor direction variables
+bool motor1_state2 = LOW;
+bool motor2_state1 = LOW;
+bool motor2_state2 = LOW;
+
 int servo_arm_angle = 0;
 int servo_claw_angle = 0;
 
