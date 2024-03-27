@@ -22,7 +22,7 @@ int JoyLX = 0; // Left Joystick X value
 int JoyRY = 0; // Right Joystick Y value
 int JoyRX = 0; // Right Joystick X value
 
-bool JoyLBT = 0; // Left Joystick Button Toggle State BOOL
+int JoyLBT = 0; // Left Joystick Button Toggle State INT
 bool JoyRBT = 0; // Right Joystick Button Toggle State BOOL
 bool B1T = 0; // Button 1 Toggle State BOOL
 bool B2T = 0; // Button 2 Toggle State BOOL
@@ -38,7 +38,7 @@ int JoyRX = 0; // Right Joystick X value
 
 bool JoyLBP = 0; // Left Joystick Button Previous State BOOL
 bool JoyLBC = 0; // Left Joystick Button Current State BOOL
-bool JoyLBT = 0; // Left Joystick Button Toggle State BOOL
+int JoyLBT = 0; // Left Joystick Button Toggle State INT
 
 bool JoyRBP = 0; // Right Joystick Button Previous State BOOL
 bool JoyRBC = 0; // Right Joystick Button Current State BOOL
@@ -86,8 +86,12 @@ void loop() {
   JoyLBP = JoyLBC;
   JoyLBC = digitalRead(JoyLBPin);
   if (JoyLBP > JoyLBC){
-    JoyLBT = !JoyLBT;
+    JoyLBT++;
+    //JoyLBT = !JoyLBT;
     delay(150);
+  }
+  if (JoyLBT > 2) {
+    JoyLBT = 0;
   }
 
   //Joystick Right button True Toggle
