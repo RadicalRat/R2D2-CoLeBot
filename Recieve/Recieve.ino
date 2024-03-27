@@ -37,7 +37,7 @@ int JoyLX = 0; // Left Joystick X value
 int JoyRY = 0; // Right Joystick Y value
 int JoyRX = 0; // Right Joystick X value
 
-bool JoyLBT = 0; // Left Joystick Button Toggle State BOOL
+int JoyLBT = 0; // Left Joystick Button Toggle State INT
 bool JoyRBT = 0; // Right Joystick Button Toggle State BOOL
 bool B1T = 0; // Button 1 Toggle State BOOL
 bool B2T = 0; // Button 2 Toggle State BOOL
@@ -82,7 +82,7 @@ if (radio.available()) { //if a signal is available
   int JoyRX = inputdata.JoyRY;
   int JoyRY = inputdata.JoyRX;
 
-  bool JoyLBT = inputdata.JoyLBT;
+  int JoyLBT = inputdata.JoyLBT;
   bool JoyRBT = inputdata.JoyRBT;
   bool B1T = inputdata.B1T;
   bool B2T = inputdata.B2T;
@@ -90,7 +90,11 @@ if (radio.available()) { //if a signal is available
   // print input variables read from the reciever
   SerialPrint();
 
+  // Servo claw
   servo_claw_control(JoyRBT);
+
+    //Servo Arm
+  servo_arm_control(JoyLBT);
 
   //Motor 1
   dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
@@ -123,12 +127,8 @@ void SerialPrint() {
   Serial.println("  ");
 }
 // Arm Servo Function
-/*void servo_arm_control() {
-  JoyLBT++;  // Change condition
+void servo_arm_control(int JoyLBT) {
 
-  if (JoyLBT > 2) {
-    JoyLBT = 0;
-  }
   if (JoyLBT == 0) {    //Position 0
     servo_arm_angle = 0;
   }
@@ -140,14 +140,14 @@ void SerialPrint() {
   }
   armservo.write(servo_arm_angle);  // Change servo angle
   delay(20);
-} */
+}
 
 // <DONE> Claw Servo Function 
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
     servo_claw_angle = 0;   //Open Position
   }
-  if (JoyRBT == 1) {
+  else if (JoyRBT == 1) {
     servo_claw_angle = 90;    //Closed Position
   }
 
@@ -165,7 +165,7 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
   }
-  if (joystick_value < 400) {    //Reverse
+  else if (joystick_value < 400) {    //Reverse
     int spin_speed = map(joystick_value, 0, 1023, 255, 0);  //Need to invert the value so that the speed increases as the joystick value decreases
     state1 = LOW;
     state2 = HIGH;
@@ -173,7 +173,7 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
   }
-  if (joystick_value > 400 && joystick_value < 600) {
+  else if (joystick_value > 400 && joystick_value < 600) {
     int spin_speed = 0;
     state1 = LOW;
     state2 = LOW;
