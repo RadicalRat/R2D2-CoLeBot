@@ -90,16 +90,22 @@ if (radio.available()) { //if a signal is available
   // print input variables read from the reciever
   SerialPrint();
 
-  // Servo claw
-  servo_claw_control(JoyRBT);
+  if (B2T == 0) {   //This is statement will act as our kill switch (If B2T = 0 then we will not be able to control the robot)
+
+    // print input variables read from the reciever
+    SerialPrint();
+
+    // Servo claw
+    servo_claw_control(JoyRBT);
 
     //Servo Arm
-  servo_arm_control(JoyLBT);
+    servo_arm_control(JoyLBT);
 
-  //Motor 1
-  dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
-  //Motor 2 - Reverse placement of state and direction variable so that this motor will spin in opposite direction than motor one with the same input
-  dc_motor_control(JoyRY, motor2_state2, motor2_state1, motor2_direction2, motor2_direction1, motor2);
+    //Motor 1
+    dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
+    //Motor 2 - Reverse placement of state and direction variable so that this motor will spin in opposite direction than motor one with the same input
+    dc_motor_control(JoyRY, motor2_state2, motor2_state1, motor2_direction2, motor2_direction1, motor2);
+  }
 
 
   // wait 50 ms to avoid too many updates happening too quickly
@@ -154,6 +160,16 @@ void servo_claw_control(bool JoyRBT) {
   clawservo.write(servo_claw_angle);   // Change servo angle
   delay(20);
 }
+
+// Home Button Function
+/*int home_button(bool B1T, int JoyLBT) {
+  if (B1T == 1){
+    JoyLBT = 0;
+    servo_arm_angle = 0;
+    armservo.write(servo_arm_angle);
+    B1T = 0;
+  }
+}*/
 
 // <DONE> DC motor control function
 void dc_motor_control(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
