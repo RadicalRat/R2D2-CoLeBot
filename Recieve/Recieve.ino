@@ -34,7 +34,7 @@ int JoyLX = 0; // Left Joystick X value
 int JoyRY = 0; // Right Joystick Y value
 int JoyRX = 0; // Right Joystick X value
 
-int JoyLBT = 0; // Left Joystick Button Toggle State INT
+bool JoyLBT = 0; // Left Joystick Button Toggle State BOOL
 bool JoyRBT = 0; // Right Joystick Button Toggle State BOOL
 bool B1T = 0; // Button 1 Toggle State BOOL
 bool B2T = 0; // Button 2 Toggle State BOOL
@@ -146,11 +146,14 @@ void servo_claw_control() {
   delay(20);
 }
 
-//DC motor 1 control function
-void dc_motor1_control(joystick_value) {
+//DC motor control function
+void dc_motor1_control(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
   if (joystick_value > 600) {
-    map(joystick_value, 0, 1023, 0, 255)
-    motor1_state1 = HIGH;
-    motor1_state2 = LOW;
+    int spin_speed = map(joystick_value, 0, 1023, 0, 255);
+    state1 = HIGH;
+    state2 = LOW;
+    digitalWrite(dir1_pin, state1);
+    digitalWrite(dir12_pin, state2);
+    analogWrite(motor_pin, spin_speed);
   }
 }
