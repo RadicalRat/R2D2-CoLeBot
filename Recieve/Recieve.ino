@@ -6,12 +6,12 @@ const byte address[6] = "64479"; // Set address to 64479 (Team's unique signal c
 RF24 radio(9, 8); // initialize radio on pins 9 and 8
 
 // DC motor pins
-const int motor1 = 6
-const int motor2 = 5
-const int motor1_direction1 = A3   //Forward
-const int motor1_direction2 = A2    //Reverse
-const int motor2_direction1 = A5  //Forward
-const int motor2_direction2 = A4   //Reverse
+const int motor1 = 6;
+const int motor2 = 5;
+const int motor1_direction1 = A3;   //Forward
+const int motor1_direction2 = A2;    //Reverse
+const int motor2_direction1 = A5;  //Forward
+const int motor2_direction2 = A4;   //Reverse
 
 
 //Motor initializations
@@ -43,7 +43,7 @@ bool B2T = 0; // Button 2 Toggle State BOOL
 
 DataPacket inputdata;
 
-void setup() {
+void setup() {    //still need to set up the dc motors and buttons in here
   // Radio Setup
   radio.begin();
   radio.setPALevel(RF24_PA_LOW);
@@ -57,6 +57,14 @@ void setup() {
   clawservo.write(servo_claw_angle); // write the desired servo angle (servoangle) to the servo motor
   delay(20);  // every servoname.write(angle); function call needs a 20 ms delay or timer to update servo position
 
+  //Dc motors
+  pinMode(motor1, OUTPUT);
+  pinMode(motor2, OUTPUT);
+  pinMode(motor1_direction1, OUTPUT);
+  pinMode(motor1_direction2, OUTPUT);
+  pinMode(motor2_direction1, OUTPUT);
+  pinMode(motor2_direction2, OUTPUT);
+
   // Open serial port
   Serial.begin(9600);
 }
@@ -66,7 +74,16 @@ void loop() {
 if (radio.available()) { //if a signal is available
     radio.read(&inputdata, sizeof(DataPacket)); // Read incoming data and store in datapacket datastructure
   }
-  
+  JoyLY = inputdata.JoyLY;
+  JoyLX = inputdata.JoyLX;
+  JoyRY = inputdata.JoyRY;
+  JoyRX = inputdata.JoyRX;
+
+  JoyLBT = inputdata.JoyLBT;
+  JoyRBT = inputdata.JoyRBT;
+  B1T = inputdata.B1T;
+  B2T = inputdata.B2T;
+
   // print input variables read from the reciever
   SerialPrint();
 
@@ -127,4 +144,13 @@ void servo_claw_control() {
 
   clawservo.write(servo_claw_angle);   // Change servo angle
   delay(20);
+}
+
+//DC motor 1 control function
+void dc_motor1_control(joystick_value) {
+  if (joystick_value > 600) {
+    map(joystick_value, 0, 1023, 0, 255)
+    motor1_state1 = HIGH;
+    motor1_state2 = LOW;
+  }
 }
