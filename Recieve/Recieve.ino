@@ -154,7 +154,7 @@ void servo_arm_control(int JoyLBT) {
 
 // <DONE> Claw Servo Function 
 
-int MaxClaw = 100;
+int MaxClaw = 120;
 int MinClaw = 80;
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
