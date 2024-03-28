@@ -6,8 +6,8 @@
 #define JoyLYPin A5
 #define JoyLXPin A4
 #define JoyLBPin 2 
-#define JoyRYPin A3
-#define JoyRXPin A2
+#define JoyRYPin A2
+#define JoyRXPin A3
 #define JoyRBPin 3
 #define B1Pin 5
 #define B2Pin 6
