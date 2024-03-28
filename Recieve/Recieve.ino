@@ -25,8 +25,8 @@ bool motor1_state2 = LOW;
 bool motor2_state1 = LOW;
 bool motor2_state2 = LOW;
 
-int servo_arm_angle = 0;
-int servo_claw_angle = 0;
+int servo_arm_angle = 90;
+int servo_claw_angle = 90;
 
 struct DataPacket {
 /*                                         
@@ -103,7 +103,7 @@ if (radio.available()) { //if a signal is available
 
     //Motor 1
     dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
-    //Motor 2 - Reverse placement of state and direction variable so that this motor will spin in opposite direction than motor one with the same input
+    //Motor 2 - Reverse placement of state and direction variables so that this motor will spin in opposite direction than motor one with the same input
     dc_motor_control(JoyRY, motor2_state2, motor2_state1, motor2_direction2, motor2_direction1, motor2);
   }
 
@@ -136,13 +136,13 @@ void SerialPrint() {
 void servo_arm_control(int JoyLBT) {
 
   if (JoyLBT == 0) {    //Position 0
-    servo_arm_angle = 0;
-  }
-  else if (JoyLBT == 1) {    //Position 1
     servo_arm_angle = 90;
   }
+  else if (JoyLBT == 1) {    //Position 1
+    servo_arm_angle = 80;
+  }
   else if (JoyLBT == 2) {    //Position 2
-    servo_arm_angle = 180;
+    servo_arm_angle = 100;
   }
   armservo.write(servo_arm_angle);  // Change servo angle
   delay(20);
@@ -151,12 +151,15 @@ void servo_arm_control(int JoyLBT) {
 // <DONE> Claw Servo Function 
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
-    servo_claw_angle = 0;   //Open Position
+    servo_claw_angle = 90;   //Open Position
   }
   else if (JoyRBT == 1) {
-    servo_claw_angle = 90;    //Closed Position
+    servo_claw_angle = servo_claw_angle + 2;
   }
 
+  if (servo_claw_angle > 100) {
+    servo_claw_angle = 100;
+  }
   clawservo.write(servo_claw_angle);   // Change servo angle
   delay(20);
 }
