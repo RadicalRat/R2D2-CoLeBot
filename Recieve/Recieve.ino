@@ -92,9 +92,6 @@ if (radio.available()) { //if a signal is available
 
   if (B2T == 0) {   //This is statement will act as our kill switch (If B2T = 0 then we will not be able to control the robot)
 
-    // print input variables read from the reciever
-    SerialPrint();
-
     // Servo claw
     servo_claw_control(JoyRBT);
 
