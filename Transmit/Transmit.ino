@@ -82,7 +82,7 @@ void loop() {
   JoyRX = analogRead(JoyRXPin);
 
 
-  //  Joystick Left button True Toggle
+  //  Joystick Left button 3 State Toggle
   JoyLBP = JoyLBC;
   JoyLBC = digitalRead(JoyLBPin);
   if (JoyLBP > JoyLBC){
