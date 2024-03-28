@@ -108,7 +108,7 @@ if (radio.available()) { //if a signal is available
     //Motor 1
     dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
     //Motor 2 - Reverse placement of state and direction variables so that this motor will spin in opposite direction than motor one with the same input
-    dc_motor_control(JoyRY, motor2_state2, motor2_state1, motor2_direction2, motor2_direction1, motor2);
+    dc_motor_control(JoyRY, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
   }
 
 
