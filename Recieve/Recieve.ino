@@ -5,14 +5,21 @@
 const byte address[6] = "64479"; // Set address to 64479 (Team's unique signal code)
 RF24 radio(9, 8); // initialize radio on pins 9 and 8
 
-// DC motor pins
-const int motor1 = 6;
-const int motor2 = 5;
-const int motor1_direction1 = A3;   //Forward
-const int motor1_direction2 = A2;    //Reverse
-const int motor2_direction1 = A5;  //Forward
-const int motor2_direction2 = A4;   //Reverse
+// DC motor pins -> Motor 1 = Left ; Motor 2 = Right
+#define motor1 6
+#define motor2 5
+#define motor1_direction1 A3  //Forward
+#define motor1_direction2 A2  //Reverse
+#define motor2_direction1 A5  //Forward
+#define motor2_direction2 A4  //Reverse
 
+
+// Servo Pins
+#define ServoClawPin 4
+#define ServoArmPin 3
+
+// Buzzer Pins
+#define Buzzer 
 
 //Motor initializations
 Servo armservo;
@@ -54,8 +61,8 @@ void setup() {    //still need to set up the dc motors and buttons in here
   radio.startListening();
 
   //Servos
-  armservo.attach(3); // Servo signal wire on pin 3 and 5
-  clawservo.attach(4);
+  armservo.attach(ServoArmPin); // Servo signal wire on pin 3 and 5
+  clawservo.attach(ServoClawPin);
   armservo.write(servo_arm_angle); // write the desired servo angle (servoangle) to the servo motor
   clawservo.write(servo_claw_angle); // write the desired servo angle (servoangle) to the servo motor
   delay(20);  // every servoname.write(angle); function call needs a 20 ms delay or timer to update servo position
@@ -201,3 +208,5 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
     analogWrite(motor_pin, spin_speed);
   }
 }
+
+
