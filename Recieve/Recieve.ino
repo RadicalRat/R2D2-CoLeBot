@@ -25,7 +25,7 @@ bool motor1_state2 = LOW;
 bool motor2_state1 = LOW;
 bool motor2_state2 = LOW;
 
-int servo_arm_angle = 90;
+int servo_arm_angle = 45;
 int servo_claw_angle = 90;
 
 struct DataPacket {
@@ -149,6 +149,9 @@ void servo_arm_control(int JoyLBT) {
 }
 
 // <DONE> Claw Servo Function 
+
+int MaxClaw = 100;
+int MinClaw = 80;
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
     servo_claw_angle = 90;   //Open Position
@@ -156,10 +159,7 @@ void servo_claw_control(bool JoyRBT) {
   else if (JoyRBT == 1) {
     servo_claw_angle = servo_claw_angle + 2;
   }
-
-  if (servo_claw_angle > 100) {
-    servo_claw_angle = 100;
-  }
+  servo_claw_angle = constrain(servo_claw_angle,MinClaw,MaxClaw);
   clawservo.write(servo_claw_angle);   // Change servo angle
   delay(20);
 }
