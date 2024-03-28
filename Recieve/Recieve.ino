@@ -79,8 +79,8 @@ if (radio.available()) { //if a signal is available
   }
   int JoyLY = inputdata.JoyLY;
   int JoyLX = inputdata.JoyLX;
-  int JoyRX = inputdata.JoyRY;
-  int JoyRY = inputdata.JoyRX;
+  int JoyRX = inputdata.JoyRX;
+  int JoyRY = inputdata.JoyRY;
 
   int JoyLBT = inputdata.JoyLBT;
   bool JoyRBT = inputdata.JoyRBT;
