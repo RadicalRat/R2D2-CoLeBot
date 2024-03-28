@@ -136,17 +136,18 @@ void SerialPrint() {
   Serial.print(inputdata.B2T);
   Serial.println("  ");
 }
+
 // Arm Servo Function
 void servo_arm_control(int JoyLBT) {
 
   if (JoyLBT == 0) {    //Position 0
-    servo_arm_angle = 90;
+    servo_arm_angle = 120;
   }
   else if (JoyLBT == 1) {    //Position 1
-    servo_arm_angle = 80;
+    servo_arm_angle = 35;
   }
   else if (JoyLBT == 2) {    //Position 2
-    servo_arm_angle = 100;
+    servo_arm_angle = 140;
   }
   armservo.write(servo_arm_angle);  // Change servo angle
   delay(20);
@@ -154,11 +155,11 @@ void servo_arm_control(int JoyLBT) {
 
 // <DONE> Claw Servo Function 
 
-int MaxClaw = 120;
-int MinClaw = 80;
+int MaxClaw = 121;
+int MinClaw = 70;
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
-    servo_claw_angle = 90;   //Open Position
+    servo_claw_angle = MinClaw;   //Open Position
   }
   else if (JoyRBT == 1) {
     servo_claw_angle = servo_claw_angle + 2;
@@ -181,7 +182,7 @@ void servo_claw_control(bool JoyRBT) {
 // <DONE> DC motor control function
 void dc_motor_control(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
   if (joystick_value > 600) {   //Forward
-    int spin_speed = map(joystick_value, 0, 1023, 0, 255);
+    int spin_speed = map(joystick_value, 600, 1023, 0, 255);
     state1 = HIGH;
     state2 = LOW;
     digitalWrite(dir1_pin, state1);
@@ -189,7 +190,7 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
     analogWrite(motor_pin, spin_speed);
   }
   else if (joystick_value < 400) {    //Reverse
-    int spin_speed = map(joystick_value, 0, 1023, 255, 0);  //Need to invert the value so that the speed increases as the joystick value decreases
+    int spin_speed = map(joystick_value, 400, 0, 0, 255);  //Need to invert the value so that the speed increases as the joystick value decreases
     state1 = LOW;
     state2 = HIGH;
     digitalWrite(dir1_pin, state1);
