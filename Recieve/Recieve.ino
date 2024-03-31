@@ -25,7 +25,7 @@ RF24 radio(9, 8); // initialize radio on pins 9 and 8
 Servo armservo;
 Servo clawservo;
 
-int motor1_pwm = 0;
+int motor1_pwm = 0;     //Motor PWM values
 int motor2_pwm = 0;
 bool motor1_state1 = LOW;   //Next 4 lines are motor direction variables
 bool motor1_state2 = LOW;
@@ -60,14 +60,14 @@ void setup() {    //still need to set up the dc motors and buttons in here
   radio.openReadingPipe(0, address);
   radio.startListening();
 
-  //Servos
-  armservo.attach(ServoArmPin); // Servo signal wire on pin 3 and 5
+  //Servos Setup
+  armservo.attach(ServoArmPin);
   clawservo.attach(ServoClawPin);
   armservo.write(servo_arm_angle); // write the desired servo angle (servoangle) to the servo motor
   clawservo.write(servo_claw_angle); // write the desired servo angle (servoangle) to the servo motor
-  delay(20);  // every servoname.write(angle); function call needs a 20 ms delay or timer to update servo position
+  delay(20);
 
-  //Dc motors
+  //Dc Motors Setup
   pinMode(motor1, OUTPUT);
   pinMode(motor2, OUTPUT);
   pinMode(motor1_direction1, OUTPUT);
@@ -84,6 +84,7 @@ void loop() {
 if (radio.available()) { //if a signal is available
     radio.read(&inputdata, sizeof(DataPacket)); // Read incoming data and store in datapacket datastructure
   }
+  // Setting transmitted input values to variables for later use
   int JoyLY = inputdata.JoyLY;
   int JoyLX = inputdata.JoyLX;
   int JoyRX = inputdata.JoyRX;
@@ -99,16 +100,33 @@ if (radio.available()) { //if a signal is available
 
   if (B2T == 0) {   //This is statement will act as our kill switch (If B2T = 0 then we will not be able to control the robot)
 
-    // Servo claw
+    // Servo claw Control
     servo_claw_control(JoyRBT);
 
-    //Servo Arm
+    //Servo Arm Control
     servo_arm_control(JoyLBT);
 
-    //Motor 1
+    //Motor 1 Control
     dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
-    //Motor 2 - Reverse placement of state and direction variables so that this motor will spin in opposite direction than motor one with the same input
+    //Motor 2 Control
     dc_motor_control(JoyRY, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
+  }
+  else {    //This will make sure the motors are off if the kill switch button is pressed
+    motor1_pwm = 0;   //Set spin speed to 0
+    motor2_pwm = 0;
+    motor1_state1 = LOW;   //Set all Motor States to 0
+    motor1_state2 = LOW;
+    motor2_state1 = LOW;
+    motor2_state2 = LOW;
+    //Motor 1
+    digitalWrite(motor1_direction1, motor1_state1);
+    digitalWrite(motor1_direction2, motor1_state2);
+    analogWrite(motor1, motor1_pwm);
+    //Motor 2
+    digitalWrite(motor2_direction1, motor2_state1);
+    digitalWrite(motor2_direction2, motor2_state2);
+    analogWrite(motor2, motor2_pwm);
+
   }
 
 
@@ -155,16 +173,16 @@ void servo_arm_control(int JoyLBT) {
 
 // <DONE> Claw Servo Function 
 
-int MaxClaw = 121;
+int MaxClaw = 121;     //Claw angle constraints
 int MinClaw = 70;
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
     servo_claw_angle = MinClaw;   //Open Position
   }
   else if (JoyRBT == 1) {
-    servo_claw_angle = servo_claw_angle + 2;
+    servo_claw_angle = servo_claw_angle + 2;    //Increments until max claw angle is reached
   }
-  servo_claw_angle = constrain(servo_claw_angle,MinClaw,MaxClaw);
+  servo_claw_angle = constrain(servo_claw_angle,MinClaw,MaxClaw);    //Makes sure the min and max claw angles are not exceeded
   clawservo.write(servo_claw_angle);   // Change servo angle
   delay(20);
 }
@@ -197,7 +215,7 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
   }
-  else if (joystick_value > 400 && joystick_value < 600) {
+  else if (joystick_value > 400 && joystick_value < 600) {   //Stationary
     int spin_speed = 0;
     state1 = LOW;
     state2 = LOW;
