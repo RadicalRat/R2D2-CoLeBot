@@ -2,7 +2,7 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-
+//Initialize Variables
 #define JoyLYPin A5
 #define JoyLXPin A4
 #define JoyLBPin 2 
@@ -83,14 +83,14 @@ void loop() {
 
 
   //  Joystick Left button 3 State Toggle
+  //This button will act as a counter that does not exceed 2
   JoyLBP = JoyLBC;
   JoyLBC = digitalRead(JoyLBPin);
   if (JoyLBP > JoyLBC){
-    JoyLBT++;
-    //JoyLBT = !JoyLBT;
+    JoyLBT++;   //Increment the Button value by 1 when it is pressed
     delay(150);
   }
-  if (JoyLBT > 2) {
+  if (JoyLBT > 2) {  //If the button value exceeds 2, then it will be reset back to 0
     JoyLBT = 0;
   }
 
