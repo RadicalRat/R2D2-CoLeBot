@@ -36,8 +36,8 @@ int servo_arm_angle = 45;
 int servo_claw_angle = 90;
 
 struct DataPacket {
-/*                                         
-  Data Structure for recieving the input variables to the robot, called using inputdata
+/*
+  Data Structure for transmitting the input variables to the robot, called using inputdata
 */
 int JoyLY = 0; // Left Joystick Y value
 int JoyLX = 0; // Left Joystick X value
@@ -46,7 +46,6 @@ int JoyRX = 0; // Right Joystick X value
 int Armstate = 0; // Position state for the arm
 bool JoyRBT = 0; // Right Joystick Button Toggle State BOOL
 bool B2T = 0; // Button 2 Toggle State BOOL
-
 };
 
 DataPacket inputdata;
@@ -103,10 +102,13 @@ if (radio.available()) { //if a signal is available
     //Servo Arm Control
     servo_arm_control(Armstate);
 
-    //Motor 1 Control
+    //Motor 1 Control Fast
     dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
-    //Motor 2 Control
+    //Motor 2 Control Fast
     dc_motor_control(JoyRY, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
+
+
+
   }
   else {    //This will make sure the motors are off if the kill switch button is pressed
     motor1_pwm = 0;   //Set spin speed to 0
@@ -211,4 +213,31 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
   }
 }
 
+// <DONE> DC motor control slow
+void dc_motor_control_slow(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
+  if (joystick_value < 400) {   //Forward
+    int spin_speed = map(joystick_value, 450, 0, 0, 128);   //Note: Joysticks are upside-down in the housing
+    state1 = HIGH;
+    state2 = LOW;
+    digitalWrite(dir1_pin, state1);
+    digitalWrite(dir2_pin, state2);
+    analogWrite(motor_pin, spin_speed);
+  }
+  else if (joystick_value > 600) {    //Reverse
+    int spin_speed = map(joystick_value, 550, 1023, 0, 128);  //Note: Joysticks are upside-down in the housing
+    state1 = LOW;
+    state2 = HIGH;
+    digitalWrite(dir1_pin, state1);
+    digitalWrite(dir2_pin, state2);
+    analogWrite(motor_pin, spin_speed);
+  }
+  else if (joystick_value > 400 && joystick_value < 600) {   //Stationary
+    int spin_speed = 0;
+    state1 = LOW;
+    state2 = LOW;
+    digitalWrite(dir1_pin, state1);
+    digitalWrite(dir2_pin, state2);
+    analogWrite(motor_pin, spin_speed);
+  }
+}
 

@@ -24,7 +24,6 @@ int JoyRX = 0; // Right Joystick X value
 int Armstate = 0; // Position state for the arm
 bool JoyRBT = 0; // Right Joystick Button Toggle State BOOL
 bool B2T = 0; // Button 2 Toggle State BOOL
-
 };
 
 DataPacket inputdata;
