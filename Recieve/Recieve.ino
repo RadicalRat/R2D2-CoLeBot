@@ -170,7 +170,7 @@ void servo_arm_control(int Armstate) {
 
 // <DONE> Claw Servo Function 
 
-int MaxClaw = 121;     //Claw angle constraints
+int MaxClaw = 127;     //Claw angle constraints
 int MinClaw = 70;
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
