@@ -92,7 +92,7 @@ if (radio.available()) { //if a signal is available
   bool B2T = inputdata.B2T;
 
   // print input variables read from the reciever
-  //SerialPrint();
+  SerialPrint();
 
   if (B2T == 0) {   //This is statement will act as our kill switch (If B2T = 0 then we will not be able to control the robot)
 
@@ -174,7 +174,7 @@ void servo_arm_control(int Armstate) {
 
 // <DONE> Claw Servo Function 
 
-int MaxClaw = 127;     //Claw angle constraints
+int MaxClaw = 138;     //Claw angle constraints
 int MinClaw = 70;
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
