@@ -199,16 +199,16 @@ void servo_claw_control(bool JoyRBT) {
 
 // <DONE> DC motor control function
 void dc_motor_control(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
-  if (joystick_value > 600) {   //Forward
-    int spin_speed = map(joystick_value, 600, 1023, 0, 255);
+  if (joystick_value < 400) {   //Forward
+    int spin_speed = map(joystick_value, 400, 0, 0, 255);   //Note: Joysticks are upside-down in the housing
     state1 = HIGH;
     state2 = LOW;
     digitalWrite(dir1_pin, state1);
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
   }
-  else if (joystick_value < 400) {    //Reverse
-    int spin_speed = map(joystick_value, 400, 0, 0, 255);  //Need to invert the value so that the speed increases as the joystick value decreases
+  else if (joystick_value > 600) {    //Reverse
+    int spin_speed = map(joystick_value, 600, 1023, 0, 255);  //Note: Joysticks are upside-down in the housing
     state1 = LOW;
     state2 = HIGH;
     digitalWrite(dir1_pin, state1);
