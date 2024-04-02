@@ -92,7 +92,7 @@ if (radio.available()) { //if a signal is available
   bool B2T = inputdata.B2T;
 
   // print input variables read from the reciever
-  //SerialPrint();
+  SerialPrint();
 
   if (B2T == 0) {   //This is statement will act as our kill switch (If B2T = 0 then we will not be able to control the robot)
 
@@ -107,9 +107,15 @@ if (radio.available()) { //if a signal is available
     //Motor 2 Control Fast
     dc_motor_control(JoyRY, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
     // Motor 1 Control Slow
+<<<<<<< HEAD
     //dc_motor_control(JoyLX, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
     // Motor 2 Control Slow
     //dc_motor_control(JoyRX, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
+=======
+    dc_motor_control_slow(JoyLX, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
+    // Motor 2 Control Slow
+    dc_motor_control_slow(JoyRX, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
+>>>>>>> ab253e6bf3f03b4d2ae7954d391ced1aae645f4f
 
 
 
@@ -174,7 +180,7 @@ void servo_arm_control(int Armstate) {
 
 // <DONE> Claw Servo Function 
 
-int MaxClaw = 127;     //Claw angle constraints
+int MaxClaw = 138;     //Claw angle constraints
 int MinClaw = 70;
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
