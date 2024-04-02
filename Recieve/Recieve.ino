@@ -43,10 +43,8 @@ int JoyLY = 0; // Left Joystick Y value
 int JoyLX = 0; // Left Joystick X value
 int JoyRY = 0; // Right Joystick Y value
 int JoyRX = 0; // Right Joystick X value
-
-int JoyLBT = 0; // Left Joystick Button Toggle State INT
+int Armstate = 0; // Position state for the arm
 bool JoyRBT = 0; // Right Joystick Button Toggle State BOOL
-bool B1T = 0; // Button 1 Toggle State BOOL
 bool B2T = 0; // Button 2 Toggle State BOOL
 
 };
@@ -90,13 +88,12 @@ if (radio.available()) { //if a signal is available
   int JoyRX = inputdata.JoyRX;
   int JoyRY = inputdata.JoyRY;
 
-  int JoyLBT = inputdata.JoyLBT;
+  int Armstate = inputdata.Armstate;
   bool JoyRBT = inputdata.JoyRBT;
-  bool B1T = inputdata.B1T;
   bool B2T = inputdata.B2T;
 
   // print input variables read from the reciever
-  SerialPrint();
+  //SerialPrint();
 
   if (B2T == 0) {   //This is statement will act as our kill switch (If B2T = 0 then we will not be able to control the robot)
 
@@ -104,7 +101,7 @@ if (radio.available()) { //if a signal is available
     servo_claw_control(JoyRBT);
 
     //Servo Arm Control
-    servo_arm_control(JoyLBT);
+    servo_arm_control(Armstate);
 
     //Motor 1 Control
     dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
@@ -145,26 +142,24 @@ void SerialPrint() {
   Serial.print("  ");
   Serial.print(inputdata.JoyRX);
   Serial.print("  ");
-  Serial.print(inputdata.JoyLBT);
+  Serial.print(inputdata.Armstate);
   Serial.print("  ");
   Serial.print(inputdata.JoyRBT);
-  Serial.print("  ");
-  Serial.print(inputdata.B1T);
   Serial.print("  ");
   Serial.print(inputdata.B2T);
   Serial.println("  ");
 }
 
 // Arm Servo Function
-void servo_arm_control(int JoyLBT) {
+void servo_arm_control(int Armstate) {
 
-  if (JoyLBT == 0) {    //Position 0
+  if (Armstate == 0) {    //Position 0
     servo_arm_angle = 120;
   }
-  else if (JoyLBT == 1) {    //Position 1
+  else if (Armstate == 1) {    //Position 1
     servo_arm_angle = 35;
   }
-  else if (JoyLBT == 2) {    //Position 2
+  else if (Armstate == 2) {    //Position 2
     servo_arm_angle = 140;
   }
   armservo.write(servo_arm_angle);  // Change servo angle
@@ -187,15 +182,6 @@ void servo_claw_control(bool JoyRBT) {
   delay(20);
 }
 
-// Home Button Function
-/*int home_button(bool B1T, int JoyLBT) {
-  if (B1T == 1){
-    JoyLBT = 0;
-    servo_arm_angle = 0;
-    armservo.write(servo_arm_angle);
-    B1T = 0;
-  }
-}*/
 
 // <DONE> DC motor control function
 void dc_motor_control(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
