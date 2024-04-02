@@ -21,10 +21,8 @@ int JoyLY = 0; // Left Joystick Y value
 int JoyLX = 0; // Left Joystick X value
 int JoyRY = 0; // Right Joystick Y value
 int JoyRX = 0; // Right Joystick X value
-
-int JoyLBT = 0; // Left Joystick Button Toggle State INT
+int Armstate = 0; // Position state for the arm
 bool JoyRBT = 0; // Right Joystick Button Toggle State BOOL
-bool B1T = 0; // Button 1 Toggle State BOOL
 bool B2T = 0; // Button 2 Toggle State BOOL
 
 };
@@ -38,7 +36,7 @@ int JoyRX = 0; // Right Joystick X value
 
 bool JoyLBP = 0; // Left Joystick Button Previous State BOOL
 bool JoyLBC = 0; // Left Joystick Button Current State BOOL
-int JoyLBT = 0; // Left Joystick Button Toggle State INT
+int Armstate = 0; // Controller Variable for the state of the Arm
 
 bool JoyRBP = 0; // Right Joystick Button Previous State BOOL
 bool JoyRBC = 0; // Right Joystick Button Current State BOOL
@@ -46,7 +44,6 @@ bool JoyRBT = 0; // Right Joystick Button Toggle State BOOL
 
 bool B1P = 0; // Button 1 Previous State BOOL
 bool B1C = 0; // Button 1 Current State BOOL
-bool B1T = 0; // Button 1 Toggle State BOOL
 
 bool B2P = 0; // Button 2 Previous State BOOL
 bool B2C = 0; // Button 2 Current State BOOL
@@ -82,19 +79,28 @@ void loop() {
   JoyRX = analogRead(JoyRXPin);
 
 
-  //  Joystick Left button 3 State Toggle
-  //This button will act as a counter that does not exceed 2
+  //  Armstate 3 State Toggle; Looks at Left Joystick button and home button
+  //  This button will act as a counter that does not exceed 2
+
   JoyLBP = JoyLBC;
   JoyLBC = digitalRead(JoyLBPin);
+  B1P = B1C;
+  B1C = digitalRead(B1Pin);
   if (JoyLBP > JoyLBC){
-    JoyLBT++;   //Increment the Button value by 1 when it is pressed
+    Armstate++;   //  Increment the Button value by 1 when it is pressed
+    delay(100);
+  }
+  if (Armstate > 2) {  // If the button value exceeds 2, then it will be reset back to 0
+    Armstate = 0;
+  }
+  if (B1P > B1C){ // If Button 1 is pressed (Home Button) -> will set Armstate to 2
+    Armstate = 2;
     delay(150);
   }
-  if (JoyLBT > 2) {  //If the button value exceeds 2, then it will be reset back to 0
-    JoyLBT = 0;
-  }
 
-  //Joystick Right button True Toggle
+
+
+  //Joystick Right button True Toggle -> Claw Control
   JoyRBP = JoyRBC;
   JoyRBC = digitalRead(JoyRBPin);
   if (JoyRBP > JoyRBC){
@@ -102,15 +108,7 @@ void loop() {
     delay(150);
   }
 
-  //Button 1 True Toggle
-  B1P = B1C;
-  B1C = digitalRead(B1Pin);
-  if (B1P > B1C){
-    B1T = !B1T;
-    delay(150);
-  }
-
-  //Button 2 True Toggle
+  //Button 2 True Toggle -> Killswitch
   B2P = B2C;
   B2C = digitalRead(B2Pin);
   if (B2P > B2C){
@@ -139,11 +137,9 @@ void SerialPrint() {
   Serial.print("  ");
   Serial.print(JoyRX);
   Serial.print("  ");
-  Serial.print(JoyLBT);
+  Serial.print(Armstate);
   Serial.print("  ");
   Serial.print(JoyRBT);
-  Serial.print("  ");
-  Serial.print(B1T);
   Serial.print("  ");
   Serial.print(B2T);
   Serial.println("  ");
@@ -158,9 +154,8 @@ void DataUpdate() {
   inputdata.JoyRX = JoyRX;
 
   //Update Button Toggle variables into DataPacket
-  inputdata.JoyLBT = JoyLBT;
+  inputdata.Armstate = Armstate;
   inputdata.JoyRBT = JoyRBT;
-  inputdata.B1T = B1T;
   inputdata.B2T = B2T;
 
 }
