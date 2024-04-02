@@ -107,9 +107,9 @@ if (radio.available()) { //if a signal is available
     //Motor 2 Control Fast
     dc_motor_control(JoyRY, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
     // Motor 1 Control Slow
-    dc_motor_control(JoyLX, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
+    dc_motor_control_slow(JoyLX, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
     // Motor 2 Control Slow
-    dc_motor_control(JoyRX, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
+    dc_motor_control_slow(JoyRX, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
 
 
 
