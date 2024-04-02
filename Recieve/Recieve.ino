@@ -106,6 +106,10 @@ if (radio.available()) { //if a signal is available
     dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
     //Motor 2 Control Fast
     dc_motor_control(JoyRY, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
+    // Motor 1 Control Slow
+    dc_motor_control(JoyLX, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
+    // Motor 2 Control Slow
+    dc_motor_control(JoyRX, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
 
 
 
@@ -213,10 +217,10 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
   }
 }
 
-// <DONE> DC motor control slow
+// <DONE> DC motor control slow mode
 void dc_motor_control_slow(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
   if (joystick_value < 400) {   //Forward
-    int spin_speed = map(joystick_value, 450, 0, 0, 128);   //Note: Joysticks are upside-down in the housing
+    int spin_speed = map(joystick_value, 450, 0, 0, 64);   //Note: Joysticks are upside-down in the housing
     state1 = HIGH;
     state2 = LOW;
     digitalWrite(dir1_pin, state1);
@@ -224,7 +228,7 @@ void dc_motor_control_slow(int joystick_value, bool state1, bool state2, const i
     analogWrite(motor_pin, spin_speed);
   }
   else if (joystick_value > 600) {    //Reverse
-    int spin_speed = map(joystick_value, 550, 1023, 0, 128);  //Note: Joysticks are upside-down in the housing
+    int spin_speed = map(joystick_value, 550, 1023, 0, 64);  //Note: Joysticks are upside-down in the housing
     state1 = LOW;
     state2 = HIGH;
     digitalWrite(dir1_pin, state1);
