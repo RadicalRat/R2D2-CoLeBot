@@ -92,7 +92,7 @@ if (radio.available()) { //if a signal is available
   bool B2T = inputdata.B2T;
 
   // print input variables read from the reciever
-  SerialPrint();
+  //SerialPrint();
 
   if (B2T == 0) {   //This is statement will act as our kill switch (If B2T = 0 then we will not be able to control the robot)
 
@@ -102,20 +102,20 @@ if (radio.available()) { //if a signal is available
     //Servo Arm Control
     servo_arm_control(Armstate);
 
+
+  if (Armstate == 1 || Armstate == 0){
+    // Motor 1 Control Slow
+    dc_motor_control_slow(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
+    // Motor 2 Control Slow
+    dc_motor_control_slow(JoyRY, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
+} else{
     //Motor 1 Control Fast
     dc_motor_control(JoyLY, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
     //Motor 2 Control Fast
     dc_motor_control(JoyRY, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
-    // Motor 1 Control Slow
-<<<<<<< HEAD
-    //dc_motor_control(JoyLX, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
-    // Motor 2 Control Slow
-    //dc_motor_control(JoyRX, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
-=======
-    dc_motor_control_slow(JoyLX, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
-    // Motor 2 Control Slow
-    dc_motor_control_slow(JoyRX, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
->>>>>>> ab253e6bf3f03b4d2ae7954d391ced1aae645f4f
+}
+    
+
 
 
 
@@ -169,7 +169,7 @@ void servo_arm_control(int Armstate) {
     servo_arm_angle = 120;
   }
   else if (Armstate == 1) {    //Position 1
-    servo_arm_angle = 35;
+    servo_arm_angle = 55;
   }
   else if (Armstate == 2) {    //Position 2
     servo_arm_angle = 140;
@@ -180,14 +180,14 @@ void servo_arm_control(int Armstate) {
 
 // <DONE> Claw Servo Function 
 
-int MaxClaw = 138;     //Claw angle constraints
-int MinClaw = 70;
+int MaxClaw = 130;     //Claw angle constraints
+int MinClaw = 90;
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
     servo_claw_angle = MinClaw;   //Open Position
   }
   else if (JoyRBT == 1) {
-    servo_claw_angle = servo_claw_angle + 2;    //Increments until max claw angle is reached
+    servo_claw_angle = servo_claw_angle + 5;    //Increments until max claw angle is reached
   }
   servo_claw_angle = constrain(servo_claw_angle,MinClaw,MaxClaw);    //Makes sure the min and max claw angles are not exceeded
   clawservo.write(servo_claw_angle);   // Change servo angle
@@ -197,21 +197,25 @@ void servo_claw_control(bool JoyRBT) {
 
 // <DONE> DC motor control function
 void dc_motor_control(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
-  if (joystick_value < 450) {   //Forward
-    int spin_speed = map(joystick_value, 450, 0, 0, 255);   //Note: Joysticks are upside-down in the housing
+  if (joystick_value < 480) {   //Forward
+    int spin_speed = map(joystick_value, 480, 0, 0, 255);   //Note: Joysticks are upside-down in the housing
     state1 = HIGH;
     state2 = LOW;
     digitalWrite(dir1_pin, state1);
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
+    Serial.print("FWD");
+    Serial.println(spin_speed);
   }
-  else if (joystick_value > 550) {    //Reverse
-    int spin_speed = map(joystick_value, 550, 1023, 0, 255);  //Note: Joysticks are upside-down in the housing
+  else if (joystick_value > 540) {    //Reverse
+    int spin_speed = map(joystick_value, 540, 1023, 0, 255);  //Note: Joysticks are upside-down in the housing
     state1 = LOW;
     state2 = HIGH;
     digitalWrite(dir1_pin, state1);
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
+    Serial.print("REV");
+    Serial.println(spin_speed);
   }
   else if (joystick_value > 450 && joystick_value < 550) {   //Stationary
     int spin_speed = 0;
@@ -225,21 +229,25 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
 
 // <DONE> DC motor control slow mode
 void dc_motor_control_slow(int joystick_value, bool state1, bool state2, const int dir1_pin, const int dir2_pin, const int motor_pin) {
-  if (joystick_value < 400) {   //Forward
-    int spin_speed = map(joystick_value, 450, 0, 0, 128);   //Note: Joysticks are upside-down in the housing
+  if (joystick_value < 480) {   //Forward
+    int spin_speed = map(joystick_value, 480, 0, 0, 128);   //Note: Joysticks are upside-down in the housing
     state1 = HIGH;
     state2 = LOW;
     digitalWrite(dir1_pin, state1);
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
+    Serial.print("FWD SLO");
+    Serial.println(spin_speed);
   }
-  else if (joystick_value > 600) {    //Reverse
-    int spin_speed = map(joystick_value, 550, 1023, 0, 128);  //Note: Joysticks are upside-down in the housing
+  else if (joystick_value > 540) {    //Reverse
+    int spin_speed = map(joystick_value, 540, 1023, 0, 128);  //Note: Joysticks are upside-down in the housing
     state1 = LOW;
     state2 = HIGH;
     digitalWrite(dir1_pin, state1);
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
+    Serial.print("REV SLO");
+    Serial.println(spin_speed);
   }
   else if (joystick_value > 400 && joystick_value < 600) {   //Stationary
     int spin_speed = 0;

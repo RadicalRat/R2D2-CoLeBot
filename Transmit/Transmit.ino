@@ -3,11 +3,11 @@
 #include <RF24.h>
 
 //Initialize Variables
-#define JoyLYPin A2
-#define JoyLXPin A3
+#define JoyLYPin A4
+#define JoyLXPin A5
 #define JoyLBPin 2 
-#define JoyRYPin A5
-#define JoyRXPin A4
+#define JoyRYPin A3
+#define JoyRXPin A2
 #define JoyRBPin 3
 #define B1Pin 5
 #define B2Pin 6
@@ -71,9 +71,9 @@ void setup() {
 
 void loop() {
   // Update joystick values with analog read
-  JoyLY = analogRead(JoyLYPin);
+  JoyLY = (1023-analogRead(JoyLYPin));
   JoyLX = analogRead(JoyLXPin);
-  JoyRY = analogRead(JoyRYPin);
+  JoyRY = (1023-analogRead(JoyRYPin));
   JoyRX = analogRead(JoyRXPin);
 
 
