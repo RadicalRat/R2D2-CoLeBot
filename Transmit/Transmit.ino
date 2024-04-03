@@ -3,15 +3,14 @@
 #include <RF24.h>
 
 //Initialize Variables
-#define JoyLYPin A5
-#define JoyLXPin A4
+#define JoyLYPin A2
+#define JoyLXPin A3
 #define JoyLBPin 2 
-#define JoyRYPin A2
-#define JoyRXPin A3
+#define JoyRYPin A5
+#define JoyRXPin A4
 #define JoyRBPin 3
 #define B1Pin 5
 #define B2Pin 6
-
 
 struct DataPacket {
 /*
