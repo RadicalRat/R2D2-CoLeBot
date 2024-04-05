@@ -76,23 +76,31 @@ void setup() {    //still need to set up the dc motors and buttons in here
   Serial.begin(9600);
 }
 
-void loop() {
+  int JoyLY;
+  int JoyLX;
+  int JoyRX;
+  int JoyRY;
 
-if (radio.available()) { //if a signal is available
+  int Armstate;
+  bool JoyRBT;
+  bool B2T;
+
+
+void loop() {
+  if (radio.available()) { //if a signal is available
     radio.read(&inputdata, sizeof(DataPacket)); // Read incoming data and store in datapacket datastructure
   }
   // Setting transmitted input values to variables for later use
-  int JoyLY = inputdata.JoyLY;
-  int JoyLX = inputdata.JoyLX;
-  int JoyRX = inputdata.JoyRX;
-  int JoyRY = inputdata.JoyRY;
+  JoyLY = inputdata.JoyLY;
+  JoyLX = inputdata.JoyLX;
+  JoyRX = inputdata.JoyRX;
+  JoyRY = inputdata.JoyRY;
 
-  int Armstate = inputdata.Armstate;
-  bool JoyRBT = inputdata.JoyRBT;
-  bool B2T = inputdata.B2T;
-
+  Armstate = inputdata.Armstate;
+  JoyRBT = inputdata.JoyRBT;
+  B2T = inputdata.B2T;
   // print input variables read from the reciever
-  //SerialPrint();
+  SerialPrint();
 
   if (B2T == 0) {   //This is statement will act as our kill switch (If B2T = 0 then we will not be able to control the robot)
 
@@ -121,21 +129,21 @@ if (radio.available()) { //if a signal is available
 
   }
   else {    //This will make sure the motors are off if the kill switch button is pressed
-    motor1_pwm = 0;   //Set spin speed to 0
-    motor2_pwm = 0;
-    motor1_state1 = LOW;   //Set all Motor States to 0
-    motor1_state2 = LOW;
-    motor2_state1 = LOW;
-    motor2_state2 = LOW;
-    //Motor 1
-    digitalWrite(motor1_direction1, motor1_state1);
-    digitalWrite(motor1_direction2, motor1_state2);
-    analogWrite(motor1, motor1_pwm);
-    //Motor 2
-    digitalWrite(motor2_direction1, motor2_state1);
-    digitalWrite(motor2_direction2, motor2_state2);
-    analogWrite(motor2, motor2_pwm);
-
+    // motor1_pwm = 0;   //Set spin speed to 0
+    // motor2_pwm = 0;
+    // motor1_state1 = LOW;   //Set all Motor States to 0
+    // motor1_state2 = LOW;
+    // motor2_state1 = LOW;
+    // motor2_state2 = LOW;
+    // //Motor 1
+    // digitalWrite(motor1_direction1, motor1_state1);
+    // digitalWrite(motor1_direction2, motor1_state2);
+    // analogWrite(motor1, motor1_pwm);
+    // //Motor 2
+    // digitalWrite(motor2_direction1, motor2_state1);
+    // digitalWrite(motor2_direction2, motor2_state2);
+    // analogWrite(motor2, motor2_pwm);
+    gwiddy();
   }
 
 
@@ -169,7 +177,7 @@ void servo_arm_control(int Armstate) {
     servo_arm_angle = 120;
   }
   else if (Armstate == 1) {    //Position 1
-    servo_arm_angle = 55;
+    servo_arm_angle = 60;
   }
   else if (Armstate == 2) {    //Position 2
     servo_arm_angle = 140;
@@ -180,14 +188,14 @@ void servo_arm_control(int Armstate) {
 
 // <DONE> Claw Servo Function 
 
-int MaxClaw = 130;     //Claw angle constraints
-int MinClaw = 90;
+int MaxClaw = 127;     //Claw angle constraints
+int MinClaw = 50;
 void servo_claw_control(bool JoyRBT) {
   if (JoyRBT == 0) {
     servo_claw_angle = MinClaw;   //Open Position
   }
   else if (JoyRBT == 1) {
-    servo_claw_angle = servo_claw_angle + 5;    //Increments until max claw angle is reached
+    servo_claw_angle = servo_claw_angle + 8;    //Increments until max claw angle is reached
   }
   servo_claw_angle = constrain(servo_claw_angle,MinClaw,MaxClaw);    //Makes sure the min and max claw angles are not exceeded
   clawservo.write(servo_claw_angle);   // Change servo angle
@@ -204,8 +212,8 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
     digitalWrite(dir1_pin, state1);
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
-    Serial.print("FWD");
-    Serial.println(spin_speed);
+    //Serial.print("FWD");
+    //Serial.println(spin_speed);
   }
   else if (joystick_value > 540) {    //Reverse
     int spin_speed = map(joystick_value, 540, 1023, 0, 255);  //Note: Joysticks are upside-down in the housing
@@ -214,8 +222,8 @@ void dc_motor_control(int joystick_value, bool state1, bool state2, const int di
     digitalWrite(dir1_pin, state1);
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
-    Serial.print("REV");
-    Serial.println(spin_speed);
+    //Serial.print("REV");
+    //Serial.println(spin_speed);
   }
   else if (joystick_value > 450 && joystick_value < 550) {   //Stationary
     int spin_speed = 0;
@@ -236,8 +244,8 @@ void dc_motor_control_slow(int joystick_value, bool state1, bool state2, const i
     digitalWrite(dir1_pin, state1);
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
-    Serial.print("FWD SLO");
-    Serial.println(spin_speed);
+    //Serial.print("FWD SLO");
+    //Serial.println(spin_speed);
   }
   else if (joystick_value > 540) {    //Reverse
     int spin_speed = map(joystick_value, 540, 1023, 0, 128);  //Note: Joysticks are upside-down in the housing
@@ -246,8 +254,8 @@ void dc_motor_control_slow(int joystick_value, bool state1, bool state2, const i
     digitalWrite(dir1_pin, state1);
     digitalWrite(dir2_pin, state2);
     analogWrite(motor_pin, spin_speed);
-    Serial.print("REV SLO");
-    Serial.println(spin_speed);
+    // Serial.print("REV SLO");
+    // Serial.println(spin_speed);
   }
   else if (joystick_value > 400 && joystick_value < 600) {   //Stationary
     int spin_speed = 0;
@@ -258,4 +266,54 @@ void dc_motor_control_slow(int joystick_value, bool state1, bool state2, const i
     analogWrite(motor_pin, spin_speed);
   }
 }
+int gwiddytoggle = 0;
+void gwiddy(){
+  dc_motor_control_slow(850, motor2_state1, motor2_state2, motor2_direction1, motor2_direction2, motor2);
+  dc_motor_control_slow(850, motor1_state1, motor1_state2, motor1_direction1, motor1_direction2, motor1);
+  recieve();
+  for (int i = 55; i <= 160; i++){
+  armservo.write(i);
+  if (i % 20 == 0 & gwiddytoggle == 0){
+    clawservo.write(MinClaw);
+    gwiddytoggle = 1;
+  } else if (i % 20 == 0 & gwiddytoggle == 1){
+    clawservo.write(MaxClaw-5);
+    gwiddytoggle = 0;
+  }
+  delay(15);
+}
+recieve();
+delay(100);
 
+for (int i = 160; i >= 55; i--){
+  armservo.write(i);
+  if (i % 20 == 0 & gwiddytoggle == 0){
+    clawservo.write(MinClaw);
+    gwiddytoggle = 1;
+  } else if (i % 20 == 0 & gwiddytoggle == 1){
+    clawservo.write(MaxClaw-5);
+    gwiddytoggle = 0;
+  }
+  delay(15);
+}
+recieve();
+delay(100);
+}
+
+void recieve(){
+
+if (radio.available()) { //if a signal is available
+    radio.read(&inputdata, sizeof(DataPacket)); // Read incoming data and store in datapacket datastructure
+  }
+  // Setting transmitted input values to variables for later use
+  JoyLY = inputdata.JoyLY;
+  JoyLX = inputdata.JoyLX;
+  JoyRX = inputdata.JoyRX;
+  JoyRY = inputdata.JoyRY;
+
+  Armstate = inputdata.Armstate;
+  JoyRBT = inputdata.JoyRBT;
+  B2T = inputdata.B2T;
+
+  // print input variables read from the reciever
+}

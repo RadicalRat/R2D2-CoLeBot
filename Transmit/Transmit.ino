@@ -10,7 +10,7 @@
 #define JoyRXPin A2
 #define JoyRBPin 3
 #define B1Pin 5
-#define B2Pin 6
+#define B2Pin 4
 
 struct DataPacket {
 /*
